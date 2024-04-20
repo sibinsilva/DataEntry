@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+        }
+        input[type="text"],
+        input[type="date"],
+        input[type="email"],
+        select {
+            width: calc(100% - 16px); /* Adjusted width to fit inside the form */
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="text"]:focus,
+        input[type="date"]:focus,
+        input[type="email"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%; /* Make submit button width same as text fields */
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        .error {
+            color: red;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Registration Form</h2>
+    <form action="/" method="post" id="registrationForm" onsubmit="return validateForm()">
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" name="firstName" required>
+
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" name="lastName" required>
+
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" name="dob" required>
+
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender" required>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+        </select>
+
+        <label for="address1">Address Line 1:</label>
+        <input type="text" id="address1" name="address1" required>
+
+        <label for="address2">Address Line 2:</label>
+        <input type="text" id="address2" name="address2">
+
+        <label for="address3">Address Line 3:</label>
+        <input type="text" id="address3" name="address3">
+
+        <label for="address4">Address Line 4:</label>
+        <input type="text" id="address4" name="address4">
+
+        <label for="postcode">Postcode:</label>
+        <input type="text" id="postcode" name="postcode" required>
+
+        <label for="phone">Phone Number:</label>
+        <input type="text" id="phone" name="phone" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <div id="emailError" class="error"></div>
+
+        <br>
+
+        <input type="submit" value="Submit">
+    </form>
+</div>
+
+<script>
+    function validateForm() {
+        var email = document.getElementById("email").value;
+        var phone = document.getElementById("phone").value;
+
+        // Email validation
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            document.getElementById("emailError").innerText = "Please enter a valid email address.";
+            return false;
+        } else {
+            document.getElementById("emailError").innerText = "";
+        }
+
+        // Phone number length validation
+        if (phone.length < 9) {
+            alert("Phone number must be at least 9 characters long.");
+            return false;
+        }
+
+        return true;
+    }
+
+    // Add event listener to form submission
+    document.getElementById('registrationForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission
+        var form = this;
+        var formData = new FormData(form);
+
+        // Send form data via fetch API
+        fetch(form.action, {
+            method: form.method,
+            body: formData
+        })
+        .then(response => {
+                if (response.ok) {
+                    return response.text(); // Return response as text
+                } else {
+                    throw new Error('Network response was not ok');
+                }
+            })
+            .then(data => {
+                if (data.includes('successfully')) {
+                    alert('User data saved successfully'); // Display alert if data saved successfully
+                    form.reset(); // Reset the form if data saved successfully
+                }
+            })
+            .catch(error => {
+                alert(error)
+                console.error('There was a problem with the fetch operation:', error);
+            });
+    });
+</script>
+
+</body>
+</html>
